@@ -9,62 +9,71 @@ import javax.swing.border.EtchedBorder;
 import java.util.ArrayList;
 
 public class LOTTOgen extends JFrame implements WindowListener {
-    CommonMethods commonMethods = new CommonMethods();
 
+    // Variable for the maximum number in a lottery line (LOTTO: 40).
+    public static int NUM_OF_BUTTONS = 40;
+
+    public static void main(String Args[]) {
+        // Create the window of the program with dimensions, and make it visible.
+        LOTTOgen myWindow = new LOTTOgen("LOTTO Generator");
+        myWindow.setMinimumSize(new Dimension(800, 450));
+        myWindow.setVisible(true);
+    }
+
+    // Contains common methods used by more than one class. BAD PRACTICE.
+    CommonMethods commonMethods;
+
+    // Main panel to hold everything in the window.
     JPanel windowPane;
 
-    JPanel numpanelOuter;
-    JPanel numpanel;
+    // Panels for the grid of numbers.
+    JPanel numpanelOuter; // holds the numpanel.
+    JPanel numpanel; // the grid and select/deselect button.
     GridBagLayout thelayout;
     GridBagConstraints gbc;
 
-    JLabel numTitle; //the title above the grid of numbers, currently unused
+    // Arraylist of the number buttons in the grid.
+    ArrayList<NumButton> buttons = new ArrayList<>();
 
-    JButton selectButton; //Select/deselect all button
+    // Select/deselect all button for the grid of numbers.
+    JButton selectButton;
     Boolean selectTogglestate;
 
+    // Panels for the options and submit button. ("generator")
     JPanel genpanelOuter;
     JPanel genpanel;
 
-    ArrayList<NumButton> buttons = new ArrayList<NumButton>(); //arraylist of the number buttons in the grid.
-
-    ArrayList<Integer> pool = new ArrayList<Integer>(); //arraylist of numbers in the random draw pool.
-    ArrayList<Integer> result = new ArrayList<Integer>(); //arraylist of randomly drawn line of numbers.
+    ArrayList<Integer> pool = new ArrayList<>(); //arraylist of numbers in the random draw pool.
+    ArrayList<Integer> result = new ArrayList<>(); //arraylist of randomly drawn line of numbers.
 
     //components to be accessed by Generator and NumButton.
     JLabel poolLabel;
     JLabel resultLabel;
 
-    public static int NUM_OF_BUTTONS = 40;
-
-    public static void main(String Args[]) {
-        LOTTOgen myWindow = new LOTTOgen("LOTTO Generator");
-        //myWindow.setPreferredSize(new Dimension(400,600));
-        myWindow.setMinimumSize(new Dimension(800, 450));
-        myWindow.setVisible(true);
-    }
-
-    public LOTTOgen(String title) { 
+    public LOTTOgen(String title) {
+        // Set window's title.
         super(title);
         addWindowListener(this);
 
-        //Big panel to hold everything in the window, for the background colour.
+        commonMethods = new CommonMethods();
+
+        // Create window pane (main JPanel) and set background colour.
         windowPane = new JPanel();
         this.add(windowPane);
         windowPane.setBackground(Color.cyan);
 
-        //The panel for the grid of numbers.
+        // Create panel to hold the grid panel.
         numpanelOuter = new JPanel();
         windowPane.add(numpanelOuter);
-        windowPane.add(numpanelOuter);
 
+        // Create the grid panel with grid bag layout.
         numpanel = new JPanel();
         numpanelOuter.add(numpanel);
         thelayout = new GridBagLayout();
         numpanel.setLayout(thelayout);
         GridBagConstraints gbc = new GridBagConstraints();
 
-        //Creating the border around numpanel.
+        //Create the border and background for the number panel.
         EmptyBorder emptyBorder = new EmptyBorder(20, 40, 20, 40);
         BevelBorder bevelBorder = new BevelBorder(BevelBorder.RAISED);
         EtchedBorder etchedBorder = new EtchedBorder(EtchedBorder.RAISED);
@@ -72,8 +81,6 @@ public class LOTTOgen extends JFrame implements WindowListener {
         CompoundBorder compoundBorder_num2 = new CompoundBorder(compoundBorder_num1, emptyBorder);
         numpanel.setBackground(Color.orange);
         numpanel.setBorder(compoundBorder_num2);
-
-        numTitle = new JLabel(" ");
 
         //Select/deselect all button
         selectButton = new JButton("Deselect All");
@@ -97,8 +104,6 @@ public class LOTTOgen extends JFrame implements WindowListener {
         resultLabel.setBorder(BorderFactory.createBevelBorder(BevelBorder.RAISED));
 
         Generator generator = new Generator(genpanel, pool, result, poolLabel, resultLabel);
-        
-        //ommonMethods.addComponent(numTitle, numpanel, thelayout, gbc, 2, 0, 1, 1);
 
         //Use a for loop to add buttons in rows of 5.
         int y = 1;
@@ -160,7 +165,7 @@ public class LOTTOgen extends JFrame implements WindowListener {
 
     public void windowClosing(WindowEvent e) {
         dispose();
-        System.exit(0); //Exit program when you close the window?
+        System.exit(0); //Exit program when you close the window
     }
 
     public void windowOpened(WindowEvent e) {}
