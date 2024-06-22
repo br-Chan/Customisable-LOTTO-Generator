@@ -1,4 +1,5 @@
 import java.awt.*;
+import java.util.List;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Random;
@@ -11,11 +12,11 @@ import javax.swing.border.BevelBorder;
 public class Generator {
     CommonMethods gcommonMethods = new CommonMethods();
 
-    ArrayList<Integer> gpool;
-    ArrayList<Integer> gresult;
-    ArrayList<Integer> copygpool = new ArrayList<Integer>(); //for storing contents of orig when generating result line.
-    ArrayList<Integer> copygresult = new ArrayList<Integer>(); //for storing contents of orig when generating result line.
-    ArrayList<String> resultLog; //for storing list of result lines with each press of submit button.
+    List<Integer> gpool;
+    List<Integer> gresult;
+    List<Integer> copygpool = new ArrayList<Integer>(); //for storing contents of orig when generating result line.
+    List<Integer> copygresult = new ArrayList<Integer>(); //for storing contents of orig when generating result line.
+    List<String> resultLog; //for storing list of result lines with each press of submit button.
 
     //Options
     JCheckBox strikeButton; //for toggling randomisation
@@ -39,7 +40,7 @@ public class Generator {
 
     public static int RESULT_LINE_SIZE = 6;
 
-    public Generator(Container yourcontainer, ArrayList<Integer> pool, ArrayList<Integer> result,
+    public Generator(Container yourcontainer, List<Integer> pool, List<Integer> result,
     JLabel poolLabel, JLabel resultLabel) {
 
         //The arraylists
@@ -215,7 +216,7 @@ public class Generator {
                 */
     }
 
-    public void copyIndices(ArrayList<Integer> origArray, ArrayList<Integer> copyArray) {
+    public void copyIndices(List<Integer> origArray, List<Integer> copyArray) {
         for (int i = 0; i < origArray.size(); ++i) {
             copyArray.add(origArray.get(i));
         }

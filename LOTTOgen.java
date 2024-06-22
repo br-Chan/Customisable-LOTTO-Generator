@@ -6,6 +6,7 @@ import javax.swing.border.CompoundBorder;
 import javax.swing.border.EmptyBorder;
 import javax.swing.border.EtchedBorder;
 
+import java.util.List;
 import java.util.ArrayList;
 
 public class LOTTOgen extends JFrame implements WindowListener {
@@ -33,7 +34,7 @@ public class LOTTOgen extends JFrame implements WindowListener {
     GridBagConstraints gbc;
 
     // Arraylist of the number buttons in the grid.
-    ArrayList<NumButton> buttons = new ArrayList<>();
+    List<NumButton> buttons;
 
     // Select/deselect all button for the grid of numbers.
     JButton selectButton;
@@ -43,11 +44,12 @@ public class LOTTOgen extends JFrame implements WindowListener {
     JPanel genpanelOuter;
     JPanel genpanel;
 
-    ArrayList<Integer> pool = new ArrayList<>(); //arraylist of numbers in the random draw pool.
-    ArrayList<Integer> result = new ArrayList<>(); //arraylist of randomly drawn line of numbers.
-
-    //components to be accessed by Generator and NumButton.
+    // Arraylist of numbers in the random draw pool and label that displays it.
+    List<Integer> pool;
     JLabel poolLabel;
+
+    // Arraylist of the randomly drawn line of numbers and label that displays it.
+    List<Integer> result;
     JLabel resultLabel;
 
     public LOTTOgen(String title) {
@@ -73,39 +75,47 @@ public class LOTTOgen extends JFrame implements WindowListener {
         numpanel.setLayout(thelayout);
         GridBagConstraints gbc = new GridBagConstraints();
 
-        //Create the border and background for the number panel.
+        buttons = new ArrayList<>(); // Number buttons in the grid.
+
+        // Create the select/deselect all button and set it to deselect intially.
+        selectButton = new JButton("Deselect All");
+        selectTogglestate = true;
+
+        // Create panel to hold the generator panel.
+        genpanelOuter = new JPanel();
+        windowPane.add(genpanelOuter);
+        windowPane.add(genpanelOuter);
+
+        // Create the generator panel.
+        genpanel = new JPanel();
+        genpanelOuter.add(genpanel);
+
+        // Create the border and background for the number and generator panel.
         EmptyBorder emptyBorder = new EmptyBorder(20, 40, 20, 40);
         BevelBorder bevelBorder = new BevelBorder(BevelBorder.RAISED);
         EtchedBorder etchedBorder = new EtchedBorder(EtchedBorder.RAISED);
         CompoundBorder compoundBorder_num1 = new CompoundBorder(bevelBorder, etchedBorder);
         CompoundBorder compoundBorder_num2 = new CompoundBorder(compoundBorder_num1, emptyBorder);
+
+        // Set the background colour and border for the number and generator panel.
         numpanel.setBackground(Color.orange);
         numpanel.setBorder(compoundBorder_num2);
-
-        //Select/deselect all button
-        selectButton = new JButton("Deselect All");
-        selectTogglestate = true; //Because all buttons are selected initially.
-
-        //The panel for the generator stuff.
-        genpanelOuter = new JPanel();
-        windowPane.add(genpanelOuter);
-        windowPane.add(genpanelOuter);
-
-        genpanel = new JPanel();
-        genpanelOuter.add(genpanel);
-
         genpanel.setBackground(Color.orange);
         genpanel.setBorder(compoundBorder_num2);
 
 
+        // Configure lists and labels for the draw pool and result.
+        pool = new ArrayList<>();
         poolLabel = new JLabel("pool label");
+        result = new ArrayList<>();
         resultLabel = new JLabel("result line label");
         resultLabel.setFont(new Font("Arial", Font.BOLD, 15));
         resultLabel.setBorder(BorderFactory.createBevelBorder(BevelBorder.RAISED));
 
+        // Instantiate the Generator class.
         Generator generator = new Generator(genpanel, pool, result, poolLabel, resultLabel);
 
-        //Use a for loop to add buttons in rows of 5.
+        //Use a for loop to add buttons in rows of 5 to the number panel.
         int y = 1;
         int x = 0;
         for (int i = 1; i <= NUM_OF_BUTTONS; ++i) {

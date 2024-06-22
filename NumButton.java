@@ -1,11 +1,12 @@
 import java.awt.*;
-//import java.awt.event.*;
 import javax.swing.*;
 import javax.swing.border.BevelBorder;
 
-import java.util.*;
+import java.util.List;
+import java.util.ArrayList;
+import java.util.Collections;
 
-public class NumButton extends JButton { //implements ActionListener
+public class NumButton extends JButton {
     CommonMethods bcommonMethods = new CommonMethods();
 
     JButton b = new JButton("Default text");
@@ -15,8 +16,8 @@ public class NumButton extends JButton { //implements ActionListener
     Container bcontainer;
     GridBagLayout blayout;
     GridBagConstraints bconstraints;
-    ArrayList<Integer> bpool;
-    ArrayList<Integer> bresult;
+    List<Integer> bpool;
+    List<Integer> bresult;
     
     JLabel bpoolLabel;
     JLabel bresultLabel;
@@ -25,7 +26,7 @@ public class NumButton extends JButton { //implements ActionListener
 
     //Create NumButton's constructor.
     public NumButton (Container yourcontainer, GridBagLayout layout, GridBagConstraints constraints,
-    ArrayList<Integer> pool, ArrayList<Integer> result, JLabel poolLabel, JLabel resultLabel) {
+    List<Integer> pool, List<Integer> result, JLabel poolLabel, JLabel resultLabel) {
         togglestate = 1; //at 2 it will be green.
 
         bcontainer = yourcontainer;
