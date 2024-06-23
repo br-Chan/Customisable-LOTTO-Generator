@@ -189,31 +189,31 @@ public class Generator {
 
     //Generates a result line, and updates the labels.
     public void getLine() {
-                copygpool.clear();
-                copyIndices(gpool, copygpool);
-                copygresult.clear();
-                copyIndices(gresult, copygresult);
+        copygpool.clear();
+        copyIndices(gpool, copygpool);
+        copygresult.clear();
+        copyIndices(gresult, copygresult);
 
-                while (gresult.size() < RESULT_LINE_SIZE) {
-                    int numDrawn = genRandom(gpool.size());
-                    gpool.remove(gpool.indexOf(numDrawn));
-                    gresult.add(numDrawn);
-                }
-                Collections.shuffle(gresult); //Shuffles all numbers, impt for when strike is on, randomises order of green numbers
-                if (!powerButton.isSelected()) gresult.add(getPowerBall()); //Adds the powerball (this happens for every line)
-                //System.out.println("gresult: " + gresult);
+        while (gresult.size() < RESULT_LINE_SIZE) {
+            int numDrawn = genRandom(gpool.size());
+            gpool.remove(gpool.indexOf(numDrawn));
+            gresult.add(numDrawn);
+        }
+        Collections.shuffle(gresult); //Shuffles all numbers, impt for when strike is on, randomises order of green numbers
+        if (!powerButton.isSelected()) gresult.add(getPowerBall()); //Adds the powerball (this happens for every line)
+        //System.out.println("gresult: " + gresult);
 
-                updateLabel();
+        updateLabel();
 
-                gpool.clear();
-                copyIndices(copygpool, gpool);
-                gresult.clear();
-                copyIndices(copygresult, gresult);
+        gpool.clear();
+        copyIndices(copygpool, gpool);
+        gresult.clear();
+        copyIndices(copygresult, gresult);
 
-                /* For testing what is in gpool and gresult afterwards
-                System.out.println("pool: " + gpool);
-                System.out.println("result: " + gresult);
-                */
+        /* For testing what is in gpool and gresult afterwards
+        System.out.println("pool: " + gpool);
+        System.out.println("result: " + gresult);
+        */
     }
 
     public void copyIndices(List<Integer> origArray, List<Integer> copyArray) {

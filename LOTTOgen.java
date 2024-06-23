@@ -124,7 +124,7 @@ public class LOTTOgen extends JFrame implements WindowListener {
 
             // Set button's name, in a way that ensures all buttons are same width.
             String name = Integer.toString(i);
-            String nobString = Integer.toString(NUM_OF_BUTTONS);
+            String nobString = Integer.toString(NUM_OF_BUTTONS); // the maximum number of digits
             while (name.length() < nobString.length()) {
                 name = "0" + name;
             }
