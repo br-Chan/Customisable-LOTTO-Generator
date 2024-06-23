@@ -6,8 +6,8 @@ import java.util.List;
 import java.util.ArrayList;
 import java.util.Collections;
 
-public class NumButton extends JButton {
-    CommonMethods bcommonMethods = new CommonMethods();
+public class NumButton {
+    CommonMethods bcommonMethods;
 
     JButton b = new JButton("Default text");
     int togglestate;
@@ -27,6 +27,8 @@ public class NumButton extends JButton {
     //Create NumButton's constructor.
     public NumButton (Container yourcontainer, GridBagLayout layout, GridBagConstraints constraints,
     List<Integer> pool, List<Integer> result, JLabel poolLabel, JLabel resultLabel) {
+        bcommonMethods  = new CommonMethods();
+
         togglestate = 1; //at 2 it will be green.
 
         bcontainer = yourcontainer;
@@ -140,7 +142,7 @@ public class NumButton extends JButton {
 
         togglebutton();
 
-        //Add action listener to the button, and what should occur when the button is clicked.
+        //Add action listener to the button, to toggle button when clicked.
         b.addActionListener(event -> {
             togglebutton();
         });

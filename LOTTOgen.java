@@ -29,7 +29,7 @@ public class LOTTOgen extends JFrame implements WindowListener {
 
     // Panels for the grid of numbers.
     JPanel numpanelOuter; // holds the numpanel.
-    JPanel numpanel; // the grid and select/deselect button.
+    JPanel numpanel; // the grid and select/deselect all button.
     GridBagLayout thelayout;
     GridBagConstraints gbc;
 
@@ -115,41 +115,39 @@ public class LOTTOgen extends JFrame implements WindowListener {
         // Instantiate the Generator class.
         Generator generator = new Generator(genpanel, pool, result, poolLabel, resultLabel);
 
-        //Use a for loop to add buttons in rows of 5 to the number panel.
-        int y = 1;
-        int x = 0;
+        //Add buttons in rows of 5 to the number panel.
+        int y = 0; // grid row
+        int x = 0; // grid column
         for (int i = 1; i <= NUM_OF_BUTTONS; ++i) {
-            //Initialise a new button object ('instance of the class').
+            // Initialise new button object ('instance of the class') and add to buttons list.
             buttons.add(new NumButton(numpanel, thelayout, gbc, pool, result, poolLabel, resultLabel));
 
-            //Set button's name, in a way that ensures all buttons are same width.
+            // Set button's name, in a way that ensures all buttons are same width.
             String name = Integer.toString(i);
             String nobString = Integer.toString(NUM_OF_BUTTONS);
             while (name.length() < nobString.length()) {
                 name = "0" + name;
             }
 
-            //run the addobjects function to add the button in the right position.
+            // Add the button to the grid in the right position.
             buttons.get(i - 1).addButton(name, buttons.get(i - 1).b, x, y, 1, 1);
 
-            //Use an if statement to add the select/deselect all button at the bottom of the grid.
+            // Add the select/deselect all button at the bottom of the grid.
             if (i == NUM_OF_BUTTONS) {
                 commonMethods.addComponent(selectButton, numpanel, thelayout, gbc, 0, y + 1, 5, 1);
             }
 
-            //Use an if statement to put the next loop's button in the next row.
+            // If 5 buttons have been placed in current row, continue to the next row.
             if (i % 5 == 0) {
                 ++y;
                 x = 0;
-            }
-            else {
+            } else {
                 ++x;
             }
         }      
         
-        
         selectButton.addActionListener(event -> {
-            //Use a for loop to toggle the button's togglestate until it's the right state.
+            //Toggle each number button's togglestate until it's the right state.
             for (int i = 1; i <= NUM_OF_BUTTONS; ++i) {
                 while (!selectTogglestate && buttons.get(i - 1).togglestate != 2 ||
                 selectTogglestate && buttons.get(i - 1).togglestate != 1) {
@@ -157,10 +155,10 @@ public class LOTTOgen extends JFrame implements WindowListener {
                 }
             }
 
-            //Switch the select button's togglestate.
+            //Switch the select/deselect button's togglestate.
             selectTogglestate = !selectTogglestate;
 
-            //Change the select button's text.
+            //Change the select/deselect button's text accordingly.
             if (selectTogglestate) {
                 selectButton.setText("Deselect All");
             }
