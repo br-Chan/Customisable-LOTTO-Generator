@@ -10,12 +10,14 @@ import javax.swing.*;
 import javax.swing.border.BevelBorder;
 
 public class Generator {
+    public static int RESULT_LINE_SIZE = 6;
+
     CommonMethods gcommonMethods = new CommonMethods();
 
     List<Integer> gpool;
     List<Integer> gresult;
-    List<Integer> copygpool = new ArrayList<Integer>(); //for storing contents of orig when generating result line.
-    List<Integer> copygresult = new ArrayList<Integer>(); //for storing contents of orig when generating result line.
+    List<Integer> copygpool; //for storing contents of orig when generating result line.
+    List<Integer> copygresult; //for storing contents of orig when generating result line.
     List<String> resultLog; //for storing list of result lines with each press of submit button.
 
     //Options
@@ -24,44 +26,50 @@ public class Generator {
     JPanel linesPanel; //to house the linesLabel and comboLines
     JLabel linesLabel;
     JComboBox<Integer> comboLines; //for deciding the number of result lines to generate.
-    String popText; //Temporary string for adding text to the pop up window when displaying result lines.
 
-    //the labels & button
+    //the labels & submit button
     JLabel gpoolLabel;
     JButton submit;
     JLabel gresultLabel;
     String text; //Temporary string for adding text to labels.
 
+    // The container, layout, etc associated with the options and submit button.
     Container gcontainer;
     GridBagLayout glayout;
     GridBagConstraints gconstraints;
 
     JFrame popFrame; //for any pop up windows, errors or otherwise.
 
-    public static int RESULT_LINE_SIZE = 6;
-
     public Generator(Container yourcontainer, List<Integer> pool, List<Integer> result,
     JLabel poolLabel, JLabel resultLabel) {
 
         //The arraylists
         gpool = pool;
+        copygpool = new ArrayList<>();
+
         gresult = result;
-        resultLog = new ArrayList<String>();
+        copygresult = new ArrayList<>();
+
+        resultLog = new ArrayList<>();
 
         //Options
         strikeButton = new JCheckBox("Strike Mode (random order)");
         strikeButton.setBackground(Color.orange);
+
         powerButton = new JToggleButton("Powerball");
         powerButton.setSelected(true);
+
         linesPanel = new JPanel();
         linesPanel.setBackground(Color.orange);
+
         linesLabel = new JLabel("Lines: ");
+
         comboLines = new JComboBox<>();
         for (int i = 1; i <= 12; ++i) {
             comboLines.addItem(i);
         }
 
-        //The labels & button
+        //The labels & submit button
         gpoolLabel = poolLabel;
         submit = new JButton("Submit!");
         gresultLabel = resultLabel;
@@ -71,55 +79,56 @@ public class Generator {
         gcontainer.setLayout(glayout);
         gconstraints = new GridBagConstraints();
 
-        //Might remove the poolLabel and keep it in LOTTOgen.java
-        //addComponent(selectButton, gcontainer, glayout, gconstraints, 0, 0, 1, 1);
-        //gconstraints.fill = GridBagConstraints.HORIZONTAL;
+
+        // Add components to the panel in the right positions.
+        // TODO decide if I want to remove the poolLabel and keep it in LOTTOgen.java
         gcommonMethods.addComponent(strikeButton, gcontainer, glayout, gconstraints, 0, 0, 2, 1);
         gcommonMethods.addComponent(powerButton, gcontainer, glayout, gconstraints, 0, 1, 2, 1);
-        
         gcommonMethods.addComponent(linesPanel, gcontainer, glayout, gconstraints, 0, 2, 2, 1);
-        //gconstraints.anchor = GridBagConstraints.EAST;
         gcommonMethods.addComponent(linesLabel, linesPanel, glayout, gconstraints, 0, 2, 1, 1);
-        //gconstraints.anchor = GridBagConstraints.WEST;
         gcommonMethods.addComponent(comboLines, linesPanel, glayout, gconstraints, 1, 2, 1, 1);
-        //gconstraints.anchor = GridBagConstraints.CENTER;
         gcommonMethods.addComponent(poolLabel, gcontainer, glayout, gconstraints, 0, 3, 2, 1);
         gcommonMethods.addComponent(submit, gcontainer, glayout, gconstraints, 0, 4, 2, 1);
         gcommonMethods.addComponent(resultLabel, gcontainer, glayout, gconstraints, 0, 5, 2, 1);
 
+        // Add action listener to the submit button to display the result and check for invalid inputs.
         submit.addActionListener(event -> {
             resultLog.clear();
 
+            // Return immediately if invalid input detected.
             if (!checkSelected()) return;
 
-            if ((int) comboLines.getSelectedItem() == 1) {
+            if ((int) comboLines.getSelectedItem() == 1) { // If only 1 result line to be printed...
+                // Generate and display 1 result line and add it to the resultLog list.
                 getLine();
                 resultLog.add(gresultLabel.getText());
             }
-            else { //if it's more than 1
-                popText = "<html>";
+            else { // If more than 1 result line to be printed...
                 for (int i = 1; i <= (int) comboLines.getSelectedItem(); ++i) {
+                    // Generate a result line that has not been added to result log yet.
                     do {
                         getLine();
-                        if (resultLog.contains(gresultLabel.getText())) System.out.println("copy!");
-                        else System.out.println("not copy!");
                     } while (resultLog.contains(gresultLabel.getText()));
 
-                    resultLog.add(gresultLabel.getText());                    
-                    //popText = popText + resultLog + "<br/>";
+                    // Add this new result line to the resultLog list.
+                    resultLog.add(gresultLabel.getText());
 
                 }
-                Collections.sort(resultLog); //This sorts the result lines, but only alphabetically.
+                Collections.sort(resultLog); // sorts the result lines alphabetically.
+
+                // Format a temp string for the pop up window to display the result lines.
+                String popText = "<html>";
                 for (int i = 1; i <= (int) comboLines.getSelectedItem(); ++i) {
                     popText = popText + resultLog.get(i - 1) + "<br/>";
                 }
                 popText = popText + "</html>";
-                //System.out.println(popText);
 
+                // Create and format a label for the pop up window.
                 JLabel popLabel = new JLabel(popText, SwingConstants.CENTER);
                 popLabel.setFont(new Font("Arial", Font.BOLD, 20));
                 popLabel.setBorder(BorderFactory.createBevelBorder(BevelBorder.RAISED));
 
+                // Display the pop up window displaying the result lines.
                 popFrame = new JFrame();
                 JOptionPane.showMessageDialog(popFrame, popLabel,
                 "Here are your numbers", JOptionPane.PLAIN_MESSAGE);
@@ -127,13 +136,15 @@ public class Generator {
 
         });
 
+        // Add an action listener to the powerball button to add the powerball number to each result line.
         powerButton.addActionListener(event -> {
-            //If comboLines has 1 selected and gresultLabel has a result line in it, add on a powerball.
-            Pattern pattern_1 = Pattern.compile("\\d+  \\d+  \\d+  \\d+  \\d+  \\d+  ", Pattern.CASE_INSENSITIVE); //result line
+            // Create pattern and matcher for a 6-number result line.
+            Pattern pattern_1 = Pattern.compile("\\d+  \\d+  \\d+  \\d+  \\d+  \\d+  ", Pattern.CASE_INSENSITIVE);
             Matcher matcher_1 = pattern_1.matcher(gresultLabel.getText());
-            //System.out.println(gresultLabel.getText());
 
+            //If comboLines has 1 selected and gresultLabel has a result line in it...
             if(matcher_1.matches() && !powerButton.isSelected()) {
+                // Add the powerball in square brackets to the result line label.
                 gresultLabel.setText(gresultLabel.getText() + "[" + String.format("%02d", getPowerBall()) + "]");
             }
             else if (matcher_1.find() && powerButton.isSelected()) {
@@ -142,12 +153,12 @@ public class Generator {
         });
     }
 
-    //Carries out a factorial of num.
-    public double fact (double num) {
+    //Carries out the factorial operation (n!).
+    public double fact (double n) {
         double i = 1;
         double j = 1;
     
-        while (j <= num) {
+        while (j <= n) {
             i = i * j;
             ++j;
         }
@@ -155,14 +166,15 @@ public class Generator {
         return i;
     }
 
-    //Carries out combination (nCi)
+    //Carries out the combination operation (nCi).
     public double combination (double n, double i) {
         return fact(n) / (fact(i) * fact(n-i));
     }
 
+    // Checks for invalid inputs and handles those errors, returns true if there are none.
     public Boolean checkSelected() {
-        if (gresult.size() > RESULT_LINE_SIZE) { //Too many greens
-            //error pop up
+        if (gresult.size() > RESULT_LINE_SIZE) { //If there are too many green numbers...
+            // Display an error pop up window.
             popFrame = new JFrame();
             JOptionPane.showMessageDialog(popFrame, "Number of green numbers must not exceed " + RESULT_LINE_SIZE + ("."),
             "Error: Excess green numbers", JOptionPane.ERROR_MESSAGE);
@@ -170,12 +182,14 @@ public class Generator {
             return false;
         }
 
+        // Calculate the maximum number of result lines that can be generated with current selections.
         double maxLines = combination(gpool.size(), (RESULT_LINE_SIZE - gresult.size()) );
-        if (!powerButton.isSelected() && (gpool.size() + gresult.size() >= 6)) maxLines = maxLines * 10;
-        //System.out.println(gpool.size() + " C " + (RESULT_LINE_SIZE - gresult.size()));
 
-        if (maxLines < (int) comboLines.getSelectedItem()) {//Too few selected
-            //error pop up
+        // If there is a powerball, multiply the maximum number by 10 to account for 10 possible powerballs.
+        if (!powerButton.isSelected() && (gpool.size() + gresult.size() >= 6)) maxLines = maxLines * 10;
+
+        if (maxLines < (int) comboLines.getSelectedItem()) { // If too few yellow and green numbers...
+            // Display an error pop up window.
             popFrame = new JFrame();
             JOptionPane.showMessageDialog(popFrame, "<html>With current settings, maximum number of possible result lines is "
             + (int) maxLines + ".<br/> Please select more yellow numbers or deselect green numbers.</html>",
@@ -187,21 +201,24 @@ public class Generator {
         return true;
     }
 
-    //Generates a result line, and updates the labels.
+    //Generates a result line, and updates the labels to display it.
     public void getLine() {
+        // Update the "copy" lists to match current draw pool and result lists.
         copygpool.clear();
         copyIndices(gpool, copygpool);
         copygresult.clear();
         copyIndices(gresult, copygresult);
 
+        // Randomly generate numbers from the draw pool until full result line has been generated.
         while (gresult.size() < RESULT_LINE_SIZE) {
             int numDrawn = genRandom(gpool.size());
             gpool.remove(gpool.indexOf(numDrawn));
             gresult.add(numDrawn);
         }
-        Collections.shuffle(gresult); //Shuffles all numbers, impt for when strike is on, randomises order of green numbers
+
+        // Shuffle all the numbers, so that the green numbers added initially are also randomised.
+        Collections.shuffle(gresult);
         if (!powerButton.isSelected()) gresult.add(getPowerBall()); //Adds the powerball (this happens for every line)
-        //System.out.println("gresult: " + gresult);
 
         updateLabel();
 
@@ -216,6 +233,7 @@ public class Generator {
         */
     }
 
+    // Copies the contents of one list into another.
     public void copyIndices(List<Integer> origArray, List<Integer> copyArray) {
         for (int i = 0; i < origArray.size(); ++i) {
             copyArray.add(origArray.get(i));
