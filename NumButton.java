@@ -9,26 +9,28 @@ import java.util.Collections;
 public class NumButton {
     CommonMethods bcommonMethods;
 
-    JButton b = new JButton("Default text");
+    // The number button with its state and associated number.
+    JButton b;
     int togglestate;
-    int bnumber; //The number of the button pressed when using getActionCommand.
+    int bnumber; // 1 -> NUM_OF_BUTTONS.
 
+    // The container, layout, etc that are associated with the button.
     Container bcontainer;
     GridBagLayout blayout;
     GridBagConstraints bconstraints;
+
     List<Integer> bpool;
-    List<Integer> bresult;
-    
     JLabel bpoolLabel;
+
+    List<Integer> bresult;
     JLabel bresultLabel;
 
-    String text; //For adding text to labels.
-
-    //Create NumButton's constructor.
     public NumButton (Container yourcontainer, GridBagLayout layout, GridBagConstraints constraints,
     List<Integer> pool, List<Integer> result, JLabel poolLabel, JLabel resultLabel) {
         bcommonMethods  = new CommonMethods();
-
+        
+        // Set the number button's initial text and togglestate.
+        b = new JButton("Default text");
         togglestate = 1; //at 2 it will be green.
 
         bcontainer = yourcontainer;
@@ -43,39 +45,49 @@ public class NumButton {
     }
 
 
-    //Toggles button between 3 states. Takes no parameters but heavily relies on int togglestate.
-    public void togglebutton() {
+    // Toggles number button between 3 states: gray, yellow and green,
+    // and adds/removes the button's number to/from the pool and result lists.
+    public void toggleButton() {
         //Switch the button's visuals and state.
-        switch (togglestate) { 
+        switch (togglestate) {
             case 1 : 
-                bpool.add(bnumber); //move to pool
-                b.setBackground(Color.yellow); //colour to yellow
+                // Add button's number to draw pool.
+                bpool.add(bnumber);
+
+                b.setBackground(Color.yellow);
                 b.setBorder(BorderFactory.createLineBorder(Color.black));
-                togglestate = 2; //state to 2
+
+                togglestate = 2;
                 break;
 
             case 2 : 
-                bpool.remove(bpool.indexOf(bnumber)); //remove from pool
-                bresult.add(bnumber); //move to result line
-                b.setBackground(Color.green); //colour to green
+                // Move button's number from draw pool to result.
+                bpool.remove(bpool.indexOf(bnumber));
+                bresult.add(bnumber);
+
+                b.setBackground(Color.green);
                 b.setBorder(new BevelBorder(BevelBorder.RAISED));
-                togglestate = 3; //state to 3
+
+                togglestate = 3;
                 break;
 
-            case 3 : //move out.
+            case 3 :
+                // Remove button's number from result.
                 bresult.remove(bresult.indexOf(bnumber));
+
                 b.setBackground(Color.lightGray);
                 b.setBorder(new BevelBorder(BevelBorder.LOWERED));
+
                 togglestate = 1;
                 break;
             
             default :
-                System.out.println("togglebutton method error. togglestate = " + togglestate);
+                System.out.println("toggleButton method error. togglestate = " + togglestate);
         }
 
         //Update text in poolLabel.
         Collections.sort(bpool);
-        text = "pool: ";
+        String text = "pool: "; // text to add to the label.
         int iTemp = -10;
         Boolean isChain = false;
         for(int i = 0; i < bpool.size(); i++) {   
@@ -140,11 +152,11 @@ public class NumButton {
         b.setBackground(Color.lightGray); //at yellow bnumber is initially in pool.
         b.setForeground(Color.black);
 
-        togglebutton();
+        toggleButton();
 
         //Add action listener to the button, to toggle button when clicked.
         b.addActionListener(event -> {
-            togglebutton();
+            toggleButton();
         });
 
         bcommonMethods.addComponent(componente, bcontainer, blayout, bconstraints, gridx, gridy, gridwidth, gridheight);

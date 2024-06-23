@@ -151,7 +151,7 @@ public class LOTTOgen extends JFrame implements WindowListener {
             for (int i = 1; i <= NUM_OF_BUTTONS; ++i) {
                 while (!selectTogglestate && buttons.get(i - 1).togglestate != 2 ||
                 selectTogglestate && buttons.get(i - 1).togglestate != 1) {
-                    buttons.get(i - 1).togglebutton();
+                    buttons.get(i - 1).toggleButton();
                 }
             }
 
@@ -169,18 +169,23 @@ public class LOTTOgen extends JFrame implements WindowListener {
 
     }    
 
-
-
+    @Override
     public void windowClosing(WindowEvent e) {
         dispose();
         System.exit(0); //Exit program when you close the window
     }
 
+    @Override
     public void windowOpened(WindowEvent e) {}
+    @Override
     public void windowActivated(WindowEvent e) {}
+    @Override
     public void windowIconified(WindowEvent e) {}
+    @Override
     public void windowDeiconified(WindowEvent e) {}
+    @Override
     public void windowDeactivated(WindowEvent e) {}
+    @Override
     public void windowClosed(WindowEvent e) {}
 }
 
