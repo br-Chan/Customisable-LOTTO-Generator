@@ -1,6 +1,8 @@
 # Customisable-LOTTO-Generator
 A GUI Java application to randomly generate Lottery numbers, with settings to personalise your lines.
 
+Demo video (2 mins): https://youtu.be/v4kLY8e4RHg
+
 <img src="README_gifs/SubmitButton.gif" width="750" />
           
 
